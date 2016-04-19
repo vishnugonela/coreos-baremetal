@@ -7,8 +7,9 @@ CoreOS on Baremetal provides guides and a service for network booting and provis
 
 ## Guides
 
-* [Network Booting](Documentation/network-booting.md)
 * [Machine Lifecycle](Documentation/machine-lifecycle.md)
+* [Network Setup](Documentation/network-setup.md)
+* [Primer: Network Booting](Documentation/network-booting.md)
 
 ## bootcfg
 
