@@ -1,0 +1,11 @@
+{
+  "id": "node1",
+  "name": "master",
+  "profile": "kubemaster",
+  "selector": {
+    "mac": "00-1f-c6-9b-97-d0"
+  },
+  "metadata": {
+    "etcd_name": "node1",
+  }
+}

@@ -1,0 +1,57 @@
+---
+ignition_version: 1
+storage:
+  disks:
+    - device: /dev/sda
+      wipe_table: true
+      partitions:
+        - label: ROOT
+          number: 0
+  filesystems:
+    - device: "/dev/nvme0n1"
+      format: "btrfs"
+      create:
+        force: true
+        options:
+          - "-LROOT"
+systemd:
+  units:
+    - name: etcd2.service
+      enable: true
+      dropins:
+        - name: 40-etcd-cluster.conf
+          contents: |
+            [Service]
+            Environment="ETCD_NAME={{.etcd_name}}"
+            Environment="ETCD_ADVERTISE_CLIENT_URLS=http://192.168.1.135:2379"
+            Environment="ETCD_INITIAL_ADVERTISE_PEER_URLS=http://192.168.1.135:2380"
+            Environment="ETCD_LISTEN_CLIENT_URLS=http://0.0.0.0:2379"
+            Environment="ETCD_LISTEN_PEER_URLS=http://192.168.1.135:2380"
+            Environment="ETCD_INITIAL_CLUSTER=kubemaster=http://192.168.1.135:2380,kubenode01=http://192.168.1.136:2380,kubenode02=http://192.168.1.137:2380,kubenode03=http://192.168.1.138:2380,kubenode04=http://192.168.1.139:2380"
+            Environment="ETCD_INITIAL_CLUSTER_STATE=new"
+            Environment="ETCD_STRICT_RECONFIG_CHECK=true"
+    - name: fleet.service
+      enable: true
+      dropins:
+        - name: fleet-metadata.conf
+          contents: |
+            [Service]
+            Environment="FLEET_METADATA=jinkit"
+networkd:
+  units:
+    - name: 00-enp0s31f6.network
+      contents: |
+        [Match]
+        Name=enp0s31f6
+        [Network]
+        Gateway=192.168.1.1
+        DNS=192.168.1.70
+        Address=192.168.1.135
+passwd:
+  users:
+    - name: <user>
+      groups:
+      - "sudo"
+      - "docker"
+      ssh_authorized_keys:
+        - ssh-rsa <key-removed>
