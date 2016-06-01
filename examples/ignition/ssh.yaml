@@ -1,5 +1,12 @@
 ---
-ignition_version: 1
+storage:
+  files:
+    - filesystem: root
+      path: /home/core/foo
+      contents:
+        inline: |
+          bar
+          bat
 {{ if index . "ssh_authorized_keys" }}
 passwd:
   users:
